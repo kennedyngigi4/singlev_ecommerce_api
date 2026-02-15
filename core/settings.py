@@ -17,7 +17,7 @@ SECRET_KEY=os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = [
-    "127.0.0.1", "636b-154-123-152-163.ngrok-free.app"
+    "127.0.0.1", "636b-154-123-152-163.ngrok-free.app", "api.quza.co.ke"
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -117,11 +117,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecomm',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
