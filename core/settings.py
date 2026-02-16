@@ -20,6 +20,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1", "636b-154-123-152-163.ngrok-free.app", "api.quza.co.ke"
 ]
 CORS_ALLOWED_ORIGINS = [
+    "https://quza.co.ke",
     "http://localhost:3000",
 ]
 
