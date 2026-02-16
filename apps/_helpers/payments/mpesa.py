@@ -53,7 +53,7 @@ class MpesaService:
             "PartyA": phone_number,
             "PartyB": shortcode,
             "PhoneNumber": phone_number,
-            "CallBackURL": "https://636b-154-123-152-163.ngrok-free.app/v1/payments/callback/",
+            "CallBackURL": "https://api.quza.co.ke/v1/payments/callback/",
             "AccountReference": reference,
             "TransactionDesc": "Payment"
         }
