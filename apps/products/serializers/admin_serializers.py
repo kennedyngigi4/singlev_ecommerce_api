@@ -152,3 +152,22 @@ class ProductVariantCreateSerializer(serializers.ModelSerializer):
         ]
     
 
+class ProductVariantListSerializer(serializers.ModelSerializer):
+
+    name = serializers.CharField(source="product.name", read_only=True)
+    category = serializers.CharField(source="product.category.name", read_only=True)
+    brand = serializers.CharField(source="product.brand.name", read_only=True)
+    thumbnail = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductVariant
+        fields = ["id", "sku", "price", "stock", "name", "category", "brand", "thumbnail"]
+
+
+    def get_thumbnail(self, obj):
+        request = self.context.get("request")
+
+        if obj:
+            url = obj.thumbnail if obj.thumbnail else obj.product.thumbnail.url
+            return request.build_absolute_uri(url) if request else url
+        return None

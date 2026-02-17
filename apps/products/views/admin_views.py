@@ -142,8 +142,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "create":
             return ProductWriteSerializer
+        elif self.action in ["update", "partial_update"]:
+            return ProductWriteSerializer
         elif self.action == 'list':
-            return ProductListSerializer
+            return ProductVariantListSerializer
         elif self.action == "retrieve":
             return ProductDetailsSerializer
         else:
@@ -153,6 +155,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.action == "retrieve":
             return Product.objects.select_related("brand", "category").prefetch_related("variants")
+        elif self.action == "list":
+            return ProductVariant.objects.select_related("product", "product__brand", "product__category")
         return Product.objects.all()
 
         
@@ -167,6 +171,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             
             return Response({ "success": True, "message": "Product created", "data": serializer.id}, status=status.HTTP_201_CREATED)
         
+        
         return Response({ "success": False, "message": "Product creation failed.", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -176,8 +181,24 @@ class ProductViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-    def perform_update(self, serializer):
-        serializer.save(updated_by=self.request.user)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial, context={'request': request})
+        
+        if serializer.is_valid():
+            serializer.save(updated_by=request.user)
+            return Response({
+                "success": True,
+                "message": "Product updated successfully.",
+                "data": serializer.data
+            }, status=status.HTTP_200_OK)
+        
+        return Response({
+            "success": False,
+            "message": "Product update failed.",
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
     
 

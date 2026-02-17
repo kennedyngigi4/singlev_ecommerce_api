@@ -145,7 +145,7 @@ class ProductByCategorySlugView(APIView):
     def get(self, request, category_slug, product_slug):
         product = get_object_or_404(
             Product.objects
-            .select_related("brand")
+            .select_related("brand", "category")
             .prefetch_related(
                 "category",
                 Prefetch(

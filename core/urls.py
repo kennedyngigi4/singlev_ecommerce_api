@@ -31,6 +31,12 @@ urlpatterns += [
 ]
 
 
+# Mobile Endpoints
+urlpatterns += [
+    path("v1/mobile/", include("apps.mobile.urls")),
+]
+
+
 
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

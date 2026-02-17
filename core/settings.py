@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'apps.shipping.apps.ShippingConfig',
     'apps.stock.apps.StockConfig',
     'apps.app_config.apps.AppConfigConfig',
+    'apps.mobile.apps.MobileConfig',
 ]
 
 INSTALLED_APPS += [
@@ -119,8 +120,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': "quza_maisha", # "ecomm", # 
-        'USER': "peter_quza", #"postgres", #,
-        'PASSWORD': "QuzaP@2030!", #"1234", # ,
+        'USER': "peter_quza", # "postgres", #
+        'PASSWORD':  "QuzaP@2030!", #, "1234", #
         'HOST': "localhost",
         'PORT': "5432",
     }

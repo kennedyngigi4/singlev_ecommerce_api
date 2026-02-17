@@ -131,7 +131,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     thumbnail = serializers.SerializerMethodField()
-    category = serializers.CharField(source="source.name", read_only=True)
+    category = serializers.CharField(source="category.name", read_only=True)
     brand = serializers.CharField(source="brand.name", read_only=True)
     variants = ProductVariantSerializer(many=True, read_only=True)
     default_variant = serializers.SerializerMethodField()
