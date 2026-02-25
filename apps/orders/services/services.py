@@ -48,6 +48,10 @@ class OrderService:
         phone_number = OrderService.normalize_phone_number(order.mpesa_number)
 
         mpesa = MpesaService()
+
+        print(phone_number)
+        print(int(round(order.total_amount)))
+
         response = mpesa.stk_push(
             phone_number=phone_number,
             amount=int(round(order.total_amount)),

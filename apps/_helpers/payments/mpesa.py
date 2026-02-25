@@ -22,8 +22,6 @@ class MpesaService:
             else "https://api.safaricom.co.ke"
         )
         
-
-
     def access_token(self):
 
         url = f"{self.base_url}/oauth/v1/generate?grant_type=client_credentials"
@@ -43,6 +41,7 @@ class MpesaService:
         access_token = self.access_token()
         password, timestamp = self.mpesa_password()
         shortcode = self.config.shortcode
+        till = self.config.till
 
         payload = {
             "BusinessShortCode": shortcode,
@@ -51,7 +50,7 @@ class MpesaService:
             "TransactionType": "CustomerBuyGoodsOnline", #CustomerBuyGoodsOnline
             "Amount": amount,
             "PartyA": phone_number,
-            "PartyB": shortcode,
+            "PartyB": till,
             "PhoneNumber": phone_number,
             "CallBackURL": "https://api.quza.co.ke/v1/payments/callback/",
             "AccountReference": reference,
@@ -66,14 +65,11 @@ class MpesaService:
         url = f"{self.base_url}/mpesa/stkpush/v1/processrequest"
         response = requests.post(url, json=payload, headers=headers)
 
-        # 🔥 IMPORTANT FOR DEBUGGING
-        print("STATUS:", response.status_code)
-        print("RESPONSE:", response.text)
-        print(response)
-
         response.raise_for_status()
 
         data = response.json()
+
+        print(data)
 
         return data
 

@@ -13,6 +13,7 @@ class MpesaConfig(models.Model):
     consumer_secret = models.CharField(max_length=255)
     shortcode = models.CharField(max_length=255)
     passkey = models.CharField(max_length=255)
+    till = models.PositiveBigIntegerField(null=True, blank=True)
     
     environment = models.CharField(max_length=55)
 
