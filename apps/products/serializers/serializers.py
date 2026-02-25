@@ -9,6 +9,23 @@ class FeaturesListSerializer(serializers.ModelSerializer):
             "id", "name", "priority"
         ]
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    thumbnail = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = [
+            "id", "name", "thumbnail"
+        ]
+
+
+    def get_thumbnail(self, obj):
+        request = self.context.get("request")
+        if obj.thumbnail:
+            return request.build_absolute_uri(obj.thumbnail.url)
+
+
 class CategoryListSerializer(serializers.ModelSerializer):
     thumbnail = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()

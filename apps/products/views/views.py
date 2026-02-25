@@ -57,8 +57,6 @@ class HomepageFeatureListViewSet(ReadOnlyModelViewSet):
         )
 
 
-
-
 class CategoryProductsView(APIView):
 
     def get(self, request, slug):

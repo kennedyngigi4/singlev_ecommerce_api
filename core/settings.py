@@ -17,7 +17,7 @@ SECRET_KEY=os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = [
-    "127.0.0.1", "636b-154-123-152-163.ngrok-free.app", "api.quza.co.ke", "185.113.249.1"
+    "127.0.0.1", "29d0-154-122-167-93.ngrok-free.app", "api.quza.co.ke", "185.113.249.1",  "10.0.2.2",
 ]
 CORS_ALLOWED_ORIGINS = [
     "https://quza.co.ke",
@@ -120,8 +120,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': "quza_maisha", # "ecomm", # 
-        'USER': "peter_quza", # "postgres", #
-        'PASSWORD':  "QuzaP@2030!", #, "1234", #
+        'USER':  "peter_quza", # "postgres", #
+        'PASSWORD': "QuzaP@2030!", #, "1234", #
         'HOST': "localhost",
         'PORT': "5432",
     }
