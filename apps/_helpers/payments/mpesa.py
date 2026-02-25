@@ -48,7 +48,7 @@ class MpesaService:
             "BusinessShortCode": shortcode,
             "Password": password,
             "Timestamp": timestamp,
-            "TransactionType": "CustomerBuyGoodsOnline",
+            "TransactionType": "CustomerBuyGoodsOnline", #CustomerBuyGoodsOnline
             "Amount": amount,
             "PartyA": phone_number,
             "PartyB": shortcode,
@@ -65,6 +65,11 @@ class MpesaService:
 
         url = f"{self.base_url}/mpesa/stkpush/v1/processrequest"
         response = requests.post(url, json=payload, headers=headers)
+
+        # 🔥 IMPORTANT FOR DEBUGGING
+        print("STATUS:", response.status_code)
+        print("RESPONSE:", response.text)
+        print(response)
 
         response.raise_for_status()
 
