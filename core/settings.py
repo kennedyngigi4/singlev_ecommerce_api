@@ -17,7 +17,7 @@ SECRET_KEY=os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = [
-    "127.0.0.1", "localhost", "api.quza.co.ke", "185.113.249.1",  "10.0.2.2"
+    "127.0.0.1", "localhost", "api.quza.co.ke", "www.api.quza.co.ke", "185.113.249.1",  "10.0.2.2"
 ]
 CORS_ALLOWED_ORIGINS = [
     "https://quza.co.ke",
