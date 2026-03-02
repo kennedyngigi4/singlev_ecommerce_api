@@ -2,15 +2,18 @@
 import uuid
 from django.db import models
 
+
 # Create your models here.
 
 
 class MpesaConfig(models.Model):
 
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    slug = models.SlugField(max_length=255, null=True, blank=True)
 
     consumer_key = models.CharField(max_length=255)
     consumer_secret = models.CharField(max_length=255)
+
     shortcode = models.CharField(max_length=255)
     passkey = models.CharField(max_length=255)
     till = models.PositiveBigIntegerField(null=True, blank=True)
