@@ -184,7 +184,7 @@ LOGGING = {
         "mpesa_file": {
             "level": "ERROR",
             "class": "logging.FileHandler",
-            "filename": "/var/log/mpesa_callback.log",
+            "filename": "/qm/backend/logs/mpesa_callback.log",
         },
     },
     "loggers": {
