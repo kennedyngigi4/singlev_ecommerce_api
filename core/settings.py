@@ -176,22 +176,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'accounts.User'
 
 
-
-# Logger
-LOGGING = {
-    "version": 1,
-    "handlers": {
-        "mpesa_file": {
-            "level": "ERROR",
-            "class": "logging.FileHandler",
-            "filename": "/qm/backend/logs/mpesa_callback.log",
-        },
-    },
-    "loggers": {
-        "mpesa": {
-            "handlers": ["mpesa_file"],
-            "level": "ERROR",
-            "propagate": False,
-        },
-    },
-}

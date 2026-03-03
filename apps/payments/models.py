@@ -16,10 +16,10 @@ class MpesaPayment(models.Model):
     
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, related_name="payments")
     checkout_request_id = models.CharField(max_length=100, null=True)
-    transaction_code = models.CharField(max_length=30, unique=True, null=True, blank=True)
+    transaction_code = models.CharField(max_length=30, null=True, blank=True)
 
-    result_code = models.CharField(max_length=100, unique=True, null=True, blank=True)
-    result_desc = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    result_code = models.CharField(max_length=100, null=True, blank=True)
+    result_desc = models.CharField(max_length=100, null=True, blank=True)
 
 
     phone_number = models.CharField(max_length=20)
