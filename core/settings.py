@@ -120,9 +120,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "quza_maisha", #  "ecomm", #  
-        'USER': "peter_quza", #  "postgres", #  
-        'PASSWORD': "QuzaP@2030!", #  "1234", #  
+        'NAME': "ecomm", #  "quza_maisha", #  
+        'USER': "postgres", #  "peter_quza", #  
+        'PASSWORD': "1234", #  "QuzaP@2030!", #  
         'HOST': "localhost",
         'PORT': "5432",
     }
@@ -174,5 +174,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # User
 AUTH_USER_MODEL = 'accounts.User'
+
+
+
+# Google email settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "quzamaisha@gmail.com"
+EMAIL_HOST_PASSWORD = "uinj fpwg goph akid"
 
 

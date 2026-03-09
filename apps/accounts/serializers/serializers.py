@@ -29,6 +29,15 @@ class LoginSerializer(serializers.Serializer):
 
 
 
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class PasswordResetConfirmationSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    password = serializers.CharField(min_length=8)
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
