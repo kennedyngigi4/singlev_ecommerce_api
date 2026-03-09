@@ -120,9 +120,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "ecomm", #  "quza_maisha", #  
-        'USER': "postgres", #  "peter_quza", #  
-        'PASSWORD': "1234", #  "QuzaP@2030!", #  
+        'NAME': "quza_maisha", #  "ecomm", #  
+        'USER': "peter_quza", #  "postgres", #  
+        'PASSWORD': "QuzaP@2030!", #  "1234", #  
         'HOST': "localhost",
         'PORT': "5432",
     }
@@ -184,6 +184,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = "quzamaisha@gmail.com"
-EMAIL_HOST_PASSWORD = "uinj fpwg goph akid"
+EMAIL_HOST_PASSWORD = "uinjfpwggophakid"
 
 
