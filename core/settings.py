@@ -35,16 +35,15 @@ CSRF_TRUSTED_ORIGINS = [
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "content-type",
     "authorization",
     "x-csrftoken",
 ]
-CORS_URLS_REGEX = r"^/.*$"
+
 CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 
 # Application definition
