@@ -43,7 +43,6 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ]
 
 CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
-CORS_ALLOW_ALL_ORIGINS = False
 
 
 # Application definition
