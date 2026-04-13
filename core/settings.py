@@ -28,10 +28,13 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://api.quza.co.ke",
+    "https://api.quza.co.ke,https://api.quza.co.ke",
     "https://quza.co.ke",
     "https://www.quza.co.ke",
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 # Application definition
 
 INSTALLED_APPS = [
