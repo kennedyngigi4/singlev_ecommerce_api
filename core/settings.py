@@ -42,6 +42,9 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     "authorization",
     "x-csrftoken",
 ]
+CORS_URLS_REGEX = r"^/.*$"
+CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -102,7 +105,7 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
