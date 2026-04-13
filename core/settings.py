@@ -20,6 +20,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1", "localhost", "api.quza.co.ke", "www.api.quza.co.ke", "185.113.249.230",  "10.0.2.2"
 ]
 CORS_ALLOWED_ORIGINS = [
+    "https://api.quza.co.ke",
     "https://quza.co.ke",
     "https://www.quza.co.ke",
     "http://localhost:3000",
