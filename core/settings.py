@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
-# from corsheaders.defaults import default_headers
+from corsheaders.defaults import default_headers
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,11 +21,11 @@ DEBUG = os.getenv("DEBUG")
 ALLOWED_HOSTS = [
     "127.0.0.1", "localhost", "api.quza.co.ke", "185.113.249.230",  "10.0.2.2"
 ]
-# CORS_ALLOWED_ORIGINS = [
-#     "https://quza.co.ke",
-#     "https://www.quza.co.ke",
-#     "http://localhost:3000",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "https://quza.co.ke",
+    "https://www.quza.co.ke",
+    "http://localhost:3000",
+]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://quza.co.ke",
@@ -34,17 +34,17 @@ CSRF_TRUSTED_ORIGINS = [
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
-# CORS_ALLOW_CREDENTIALS = True
-# CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
-# CORS_ALLOW_HEADERS = list(default_headers) + [
-#     "content-type",
-#     "authorization",
-#     "x-csrftoken",
-# ]
-# CORS_URLS_REGEX = r"^/.*$"
-# CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "content-type",
+    "authorization",
+    "x-csrftoken",
+]
+CORS_URLS_REGEX = r"^/.*$"
+CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -70,7 +70,7 @@ INSTALLED_APPS += [
 
     'rest_framework',
     'rest_framework_simplejwt',
-    # 'corsheaders',
+    'corsheaders',
 ]
 
 
@@ -105,7 +105,7 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
-    # "corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
