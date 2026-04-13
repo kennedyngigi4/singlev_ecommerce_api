@@ -20,21 +20,19 @@ ALLOWED_HOSTS = [
     "127.0.0.1", "localhost", "api.quza.co.ke", "185.113.249.230",  "10.0.2.2"
 ]
 CORS_ALLOWED_ORIGINS = [
-    "https://api.quza.co.ke",
     "https://quza.co.ke",
     "https://www.quza.co.ke",
     "http://localhost:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://api.quza.co.ke",
-    "https://api.quza.co.ke,https://api.quza.co.ke",
     "https://quza.co.ke",
     "https://www.quza.co.ke",
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
+CORS_ALLOW_CREDENTIALS = True
 # Application definition
 
 INSTALLED_APPS = [
