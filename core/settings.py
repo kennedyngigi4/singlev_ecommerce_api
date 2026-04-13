@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+from corsheaders.defaults import default_headers
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,8 +35,16 @@ CSRF_TRUSTED_ORIGINS = [
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 CORS_ALLOW_CREDENTIALS = True
-# Application definition
+CORS_ALLOW_ALL_ORIGINS = False
 
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "content-type",
+    "authorization",
+    "x-csrftoken",
+]
+
+
+# Application definition
 INSTALLED_APPS = [
     'apps.accounts.apps.AccountsConfig',
     'apps.blogs.apps.BlogsConfig',
