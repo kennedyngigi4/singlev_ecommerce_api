@@ -1,6 +1,6 @@
 asgiref>=3.3.3,<4
 certifi>=2023,<2026
-charset-normalizer==3.4.4
+charset-normalizer==3.0.0b2
 Django==6.0.1
 django-cors-headers==4.9.0
 django-filter==25.2
