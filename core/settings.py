@@ -16,7 +16,7 @@ load_dotenv()
 SECRET_KEY=os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=True
+DEBUG=False
 
 ALLOWED_HOSTS = [
     "127.0.0.1", "localhost", "api.quza.co.ke", "185.113.249.230",  "10.0.2.2"
@@ -44,6 +44,12 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     "authorization",
     "x-csrftoken",
 ]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"
 
 CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
 
