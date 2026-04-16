@@ -22,7 +22,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1", "localhost", "api.quza.co.ke", "185.113.249.230",  "10.0.2.2"
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False
+# CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "https://quza.co.ke",
     "https://www.quza.co.ke",
@@ -31,29 +31,30 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://api.quza.co.ke",
+    "https://api.quza.co.ke,https://api.quza.co.ke",
     "https://quza.co.ke",
     "https://www.quza.co.ke",
 ]
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-CORS_ALLOW_CREDENTIALS = True
-SECURE_SSL_REDIRECT = True
-USE_X_FORWARDED_HOST = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# CORS_ALLOW_CREDENTIALS = True
+# SECURE_SSL_REDIRECT = True
+# USE_X_FORWARDED_HOST = True
 
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    "content-type",
-    "authorization",
-    "x-csrftoken",
-]
+# CORS_ALLOW_HEADERS = list(default_headers) + [
+#     "content-type",
+#     "authorization",
+#     "x-csrftoken",
+# ]
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SAMESITE = "Lax"
-CSRF_COOKIE_DOMAIN = ".quza.co.ke"
-SESSION_COOKIE_DOMAIN = ".quza.co.ke"
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SAMESITE = "Lax"
+# SESSION_COOKIE_SAMESITE = "Lax"
+# CSRF_COOKIE_DOMAIN = ".quza.co.ke"
+# SESSION_COOKIE_DOMAIN = ".quza.co.ke"
 
-CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
+# CORS_EXPOSE_HEADERS = ["Content-Type", "Authorization"]
 
 
 # Application definition
