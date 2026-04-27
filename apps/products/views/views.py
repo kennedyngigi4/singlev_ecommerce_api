@@ -21,13 +21,13 @@ from apps.products.serializers.serializers import *
 #==========================================================================================
 
 
-@method_decorator(cache_page(60 * 60 * 24), name="dispatch")
+# @method_decorator(cache_page(60 * 60 * 24), name="dispatch")
 class FaeturesListView(generics.ListAPIView):
     serializer_class = FeaturesListSerializer
     queryset = Feature.objects.filter(is_active=True)
 
 
-@method_decorator(cache_page(60 * 60 * 24 * 14), name="dispatch")
+# @method_decorator(cache_page(60 * 60 * 24 * 14), name="dispatch")
 class CategoryListView(APIView):
     def get(self, request):
         categories = Category.objects.filter(
@@ -37,33 +37,30 @@ class CategoryListView(APIView):
         return Response(serializer.data)
 
 
-@method_decorator(cache_page(60 * 60 * 24 * 7), name="dispatch")
+# @method_decorator(cache_page(60 * 60 * 24 * 7), name="dispatch")
 class BrandListView(generics.ListAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.order_by("name")
     
 
 
-@method_decorator(cache_page(60 * 30), name="dispatch")
+
 class HomepageFeatureListViewSet(ReadOnlyModelViewSet):
     serializer_class = FeatureProductsSerializer
 
     def get_queryset(self):
-        return Feature.objects.filter(
-            is_active=True
-        ).order_by("priority").prefetch_related(
+        return Feature.objects.filter(is_active=True).order_by("priority").prefetch_related(
             Prefetch(
-                "featured_list",
-                queryset=Product.objects.filter(is_active=True).prefetch_related(
-                    Prefetch(
-                        "variants",
-                        queryset=ProductVariant.objects.filter(
-                            is_active=True
-                        ).only("id", "price", "thumbnail", "product"),
-                        to_attr="default_variant"
-                    )
-                ).only("id", "name", "slug"),
-                to_attr="homepage_products"
+                "variants",  # Feature → ProductVariant (correct)
+                queryset=ProductVariant.objects.filter(is_active=True)
+                .select_related("product", "product__category")
+                .only(
+                    "id", "price", "thumbnail",
+                    "product__id", "product__name", "product__slug",
+                    "product__thumbnail",
+                    "product__category__slug"
+                ),
+                to_attr="homepage_variants"
             )
         )
 

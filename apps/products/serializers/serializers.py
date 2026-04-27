@@ -37,8 +37,8 @@ class CategoryListSerializer(serializers.ModelSerializer):
         ]
 
     def get_children(self, obj):
-        qs = obj.children
-        return CategoryListSerializer(qs, many=True).data
+        qs = obj.children.all()
+        return CategoryListSerializer(qs, many=True, context=self.context).data
 
     def get_thumbnail(self, obj):
         request = self.context.get("request")
@@ -69,20 +69,15 @@ class ProductCardSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField()
     slug = serializers.SlugField()
-    thumbnail = serializers.CharField()
-    price = serializers.DecimalField(max_digits=10, decimal_places=2)
-    category = serializers.ListField()
+    thumbnail = serializers.CharField(allow_null=True)
+    price = serializers.DecimalField(max_digits=10, decimal_places=2, allow_null=True)
+    category = serializers.CharField(allow_null=True)
 
-    def to_representation(self, product):
+    def to_representation(self, variant):
         request = self.context.get("request")
+        product = variant.product
 
-        variant = getattr(product, "default_variant", None)
-
-        image = (
-            variant.thumbnail
-            if variant and variant.thumbnail
-            else product.thumbnail
-        )
+        image = variant.thumbnail or product.thumbnail
 
         image_url = (
             request.build_absolute_uri(image.url)
@@ -95,8 +90,8 @@ class ProductCardSerializer(serializers.Serializer):
             "name": product.name,
             "slug": product.slug,
             "thumbnail": image_url,
-            "price": variant.price if variant else None,
-            "category": product.category.slug,
+            "price": variant.price,
+            "category": product.category.slug if product.category else None,
         }
 
 
@@ -113,7 +108,7 @@ class FeatureProductsSerializer(serializers.ModelSerializer):
     def get_products(self, obj):
         request = self.context.get("request") 
         return ProductCardSerializer(
-            obj.homepage_products[:12],
+            obj.homepage_variants[:12],
             many=True,
             context={'request': request}
         ).data
@@ -133,7 +128,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
             "color",
             "size",
             "storage",
-
+            "features",
         ]
 
     def get_thumbnail(self, obj):

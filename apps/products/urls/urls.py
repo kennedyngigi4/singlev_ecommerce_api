@@ -7,7 +7,7 @@ router.register(r"home", HomepageFeatureListViewSet, basename="home"),
 urlpatterns = router.urls
 
 urlpatterns += [
-    path( "features/", FaeturesListView.as_view(), name="features", ),
+    path( "all_features/", FaeturesListView.as_view(), name="all_features", ),
     path( "categories/", CategoryListView.as_view(), name="categories", ),
     path( "brands/", BrandListView.as_view(), name="brands", ),
     path( "<slug:slug>/", CategoryProductsView.as_view(), name="category-products", ),
