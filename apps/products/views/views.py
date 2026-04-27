@@ -44,7 +44,7 @@ class BrandListView(generics.ListAPIView):
     
 
 
-
+@method_decorator(cache_page(60 * 30), name="dispatch")
 class HomepageFeatureListViewSet(ReadOnlyModelViewSet):
     serializer_class = FeatureProductsSerializer
 
@@ -67,9 +67,6 @@ class HomepageFeatureListViewSet(ReadOnlyModelViewSet):
             )
         )
 
-    @method_decorator(cache_page(60 * 30)) 
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
 
 
 class CategoryProductsView(APIView):
