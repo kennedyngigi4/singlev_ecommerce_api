@@ -145,7 +145,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         elif self.action in ["update", "partial_update"]:
             return ProductWriteSerializer
         elif self.action == 'list':
-            return ProductVariantListSerializer
+            return ProductReadSerializer
         elif self.action == "retrieve":
             return ProductDetailsSerializer
         else:
@@ -156,7 +156,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return Product.objects.select_related("brand", "category").prefetch_related("variants")
         elif self.action == "list":
-            return ProductVariant.objects.select_related("product", "product__brand", "product__category")
+            return Product.objects.select_related("brand", "category").prefetch_related("variants")
         return Product.objects.all()
 
         
@@ -210,13 +210,13 @@ class ProductVariantCreateView(generics.CreateAPIView):
 
     def create(self, request):
         serializer = ProductVariantCreateSerializer(data=request.data)
-        print(request.data)
+       
 
         if serializer.is_valid():
             variant = serializer.save()
             print(variant)
             return Response({ "success": True, "message": "Product added."}, status=status.HTTP_200_OK)
         
-        print(serializer.error_messages)
+       
         return Response({ "success": False, "message": "An error occured", "errors": serializer.errors}, status=status.HTTP_200_OK)
 

@@ -151,8 +151,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "peter_qm", #  "ecomm", #  
-        'USER': "peter", #  "postgres", #  
+        'NAME':  "peter_qm", # "ecomm", #  
+        'USER':  "peter", # "postgres", #  
         'PASSWORD': "qmPeter2030", #  "1234", #  
         'HOST': "localhost",
         'PORT': "5432",
@@ -201,14 +201,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  
 
-
-
-# User
+# USER MODEL
 AUTH_USER_MODEL = 'accounts.User'
 
 
 
-# Google email settings
+# GOOGLE EMAIL SETTINGS
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
@@ -219,6 +217,17 @@ EMAIL_HOST_PASSWORD = "uinjfpwggophakid"
 
 
 
+
+# CACHE
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 
 

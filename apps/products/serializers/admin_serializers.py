@@ -66,7 +66,7 @@ class ProductVariantforProductCreateSerializer(serializers.ModelSerializer):
             "color",
             "stock",
             "sku",
-            
+            "features",
         ]
 
 
@@ -78,24 +78,25 @@ class ProductWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            "name", "category", "brand", "description", "thumbnail", "variant", "features"
+            "name", "category", "brand", "description", "thumbnail", "variant"
         ]
 
 
     def create(self, validated_data):
         variant_data = validated_data.pop("variant")
-        features = validated_data.pop("features", [])
+        features = variant_data.pop("features", [])
 
         with transaction.atomic():
             product = Product.objects.create(**validated_data)
 
-            if features:
-                product.features.set(features)
-
-            ProductVariant.objects.create(
+            vari = ProductVariant.objects.create(
                 product=product,
                 **variant_data
             )    
+
+            if features:
+                vari.features.set(features)
+
 
         return product
     
@@ -108,6 +109,23 @@ class ProductVariantforProductSerializer(serializers.ModelSerializer):
             "id", "sku", "price", "discount_price", "is_active", "stock", "color", "size", "storage"
         ]
 
+
+
+class ProductReadSerializer(serializers.ModelSerializer):
+    variants = ProductVariantforProductSerializer(many=True)
+    brand = serializers.CharField(source="brand.name", read_only=True)
+    category = serializers.CharField(source="category.name", read_only=True)
+
+    class Meta:
+        model = Product
+        fields = [
+           "id", "name", "category", "brand", "thumbnail", "variants"
+        ]
+
+
+    
+
+
 class ProductDetailsSerializer(serializers.ModelSerializer):
     variants = ProductVariantforProductSerializer(many=True)
     brand = serializers.CharField(source="brand.name", read_only=True)
@@ -118,7 +136,7 @@ class ProductDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            "id","name", "category", "category_id", "brand", "brand_id", "description", "thumbnail", "features", "variants"
+            "id","name", "category", "category_id", "brand", "brand_id", "description", "thumbnail", "variants"
         ]
 
    

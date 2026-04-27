@@ -1,23 +1,33 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Prefetch, Max, Min
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.response import Response
 
-
 from apps._helpers.product_helpers import get_category_ancestors, get_descendants
 from apps.accounts.models.models import User
 from apps.products.models.models import *
 from apps.products.serializers.serializers import *
 
-# Create your views here.
+
+
+#==========================================================================================
+# VIEWS HERE
+#==========================================================================================
+
+
+@method_decorator(cache_page(60 * 60 * 24), name="dispatch")
 class FaeturesListView(generics.ListAPIView):
     serializer_class = FeaturesListSerializer
     queryset = Feature.objects.filter(is_active=True)
 
 
+@method_decorator(cache_page(60 * 60 * 24 * 14), name="dispatch")
 class CategoryListView(APIView):
     def get(self, request):
         categories = Category.objects.filter(
@@ -27,6 +37,7 @@ class CategoryListView(APIView):
         return Response(serializer.data)
 
 
+@method_decorator(cache_page(60 * 60 * 24 * 7), name="dispatch")
 class BrandListView(generics.ListAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.order_by("name")
@@ -39,9 +50,9 @@ class HomepageFeatureListViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return Feature.objects.filter(
-                is_active=True
-            ).order_by("priority").prefetch_related(
-                Prefetch(
+            is_active=True
+        ).order_by("priority").prefetch_related(
+            Prefetch(
                 "featured_list",
                 queryset=Product.objects.filter(is_active=True).prefetch_related(
                     Prefetch(
@@ -55,6 +66,10 @@ class HomepageFeatureListViewSet(ReadOnlyModelViewSet):
                 to_attr="homepage_products"
             )
         )
+
+    @method_decorator(cache_page(60 * 30)) 
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class CategoryProductsView(APIView):
