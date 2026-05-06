@@ -77,25 +77,29 @@ class ProductCardSerializer(serializers.Serializer):
     category = serializers.CharField(allow_null=True)
 
     def to_representation(self, variant):
-        request = self.context.get("request")
-        product = variant.product
+        try:
+            request = self.context.get("request")
+            product = variant.product
 
-        image = variant.thumbnail or product.thumbnail
+            image = variant.thumbnail or product.thumbnail
 
-        image_url = (
-            request.build_absolute_uri(image.url)
-            if image and request
-            else image.url if image else None
-        )
+            image_url = (
+                request.build_absolute_uri(image.url)
+                if image and request
+                else image.url if image else None
+            )
 
-        return {
-            "id": variant.id,
-            "name": product.name,
-            "slug": product.slug,
-            "thumbnail": image_url,
-            "price": variant.price,
-            "category": product.category.slug if product.category else None,
-        }
+            return {
+                "id": variant.id,
+                "name": product.name,
+                "slug": product.slug,
+                "thumbnail": image_url,
+                "price": variant.price,
+                "category": product.category.slug if product.category else None,
+            }
+        except Exception as e:
+            print("ERROR PRODUCT CARD:", str(e), "VARIANT:", variant.id)
+            raise
 
 
 
