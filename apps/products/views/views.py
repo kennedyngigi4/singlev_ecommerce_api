@@ -21,13 +21,13 @@ from apps.products.serializers.serializers import *
 #==========================================================================================
 
 
-# @method_decorator(cache_page(60 * 60 * 24), name="dispatch")
+@method_decorator(cache_page(60 * 60 * 24), name="dispatch")
 class FaeturesListView(generics.ListAPIView):
     serializer_class = FeaturesListSerializer
     queryset = Feature.objects.filter(is_active=True)
 
 
-# @method_decorator(cache_page(60 * 60 * 24 * 14), name="dispatch")
+@method_decorator(cache_page(60 * 60 * 24 * 14), name="dispatch")
 class CategoryListView(APIView):
     def get(self, request):
         categories = Category.objects.filter(
@@ -37,21 +37,21 @@ class CategoryListView(APIView):
         return Response(serializer.data)
 
 
-# @method_decorator(cache_page(60 * 60 * 24 * 7), name="dispatch")
+@method_decorator(cache_page(60 * 60 * 10), name="dispatch")
 class BrandListView(generics.ListAPIView):
     serializer_class = BrandListSerializer
     queryset = Brand.objects.order_by("name")
     
 
 
-
+@method_decorator(cache_page(60 * 60 * 10), name="dispatch")
 class HomepageFeatureListViewSet(ReadOnlyModelViewSet):
     serializer_class = FeatureProductsSerializer
 
     def get_queryset(self):
         return Feature.objects.filter(is_active=True).order_by("priority").prefetch_related(
             Prefetch(
-                "variants",  # Feature → ProductVariant (correct)
+                "variants",  
                 queryset=ProductVariant.objects.filter(is_active=True)
                 .select_related("product", "product__category")
                 .only(
@@ -80,68 +80,67 @@ class CategoryProductsView(APIView):
         is_root = category.parent is None
         has_children = children.exists()
 
-        
+        # If category has children, include descendants
         if has_children:
             descendant_categories = get_descendants(category)
 
-            products = Product.objects.filter(
-                category__in=descendant_categories,
+            variants = ProductVariant.objects.select_related(
+                "product",
+                "product__brand",
+                "product__category"
+            ).filter(
+                product__category__in=descendant_categories,
+                product__is_active=True,
                 is_active=True
-            ).distinct().select_related("brand").prefetch_related(
-                Prefetch(
-                    "variants",
-                    queryset=ProductVariant.objects.filter(is_active=True).order_by("price"),
-                    to_attr="default_variant"
-                )
-            )
+            ).order_by("price")
 
             return Response({
                 "type": "root" if is_root else "parent",
-                "category": CategoryListSerializer(category).data,
+                "category": CategoryListSerializer(category, context={"request": request}).data,
                 "breadcrumbs": breadcrumbs,
-                "children": CategoryListSerializer(children, many=True).data,
+                "children": CategoryListSerializer(children, many=True, context={"request": request}).data,
                 "products": ProductCardSerializer(
-                    products,
+                    variants,
                     many=True,
                     context={"request": request}
                 ).data,
-                "filters": self.get_filters(products)
+                "filters": self.get_filters(variants)
             })
 
-        # LEAF
-        products = Product.objects.filter(
-            category=category,
+        # LEAF category (no children)
+        variants = ProductVariant.objects.select_related(
+            "product",
+            "product__brand",
+            "product__category"
+        ).filter(
+            product__category=category,
+            product__is_active=True,
             is_active=True
-        ).distinct().select_related("brand").prefetch_related(
-            Prefetch(
-                "variants",
-                queryset=ProductVariant.objects.filter(is_active=True).order_by("price"),
-                to_attr="default_variant"
-            )
-        )
+        ).order_by("price")
 
         return Response({
             "type": "leaf",
-            "category": CategoryListSerializer(category).data,
+            "category": CategoryListSerializer(category, context={"request": request}).data,
             "breadcrumbs": breadcrumbs,
             "children": [],
             "products": ProductCardSerializer(
-                products,
+                variants,
                 many=True,
                 context={"request": request}
             ).data,
-            "filters": self.get_filters(products)
+            "filters": self.get_filters(variants)
         })
-    
-    def get_filters(self, products):
+
+    def get_filters(self, variants):
         return {
-            "brands": products.values(
-                "brand__id",
-                "brand__name"
+            "brands": variants.values(
+                "product__brand__id",
+                "product__brand__name"
             ).distinct(),
+
             "price": {
-                "min": products.aggregate(Min("variants__price"))["variants__price__min"],
-                "max": products.aggregate(Max("variants__price"))["variants__price__max"],
+                "min": variants.aggregate(Min("price"))["price__min"],
+                "max": variants.aggregate(Max("price"))["price__max"],
             }
         }
 
@@ -158,7 +157,6 @@ class ProductByCategorySlugView(APIView):
                 Prefetch(
                     "variants",
                     queryset=ProductVariant.objects.filter(is_active=True)
-                    
                 )
             ),
             slug=product_slug,
@@ -167,6 +165,8 @@ class ProductByCategorySlugView(APIView):
         )
 
         serializer = ProductDetailSerializer(product, context={"request": request})
+
+        
         return Response(serializer.data)
 
 

@@ -22,8 +22,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_thumbnail(self, obj):
         request = self.context.get("request")
+
         if obj.thumbnail:
-            return request.build_absolute_uri(obj.thumbnail.url)
+            url = obj.thumbnail.url
+            return request.build_absolute_uri(url) if request else url
+        return None
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
@@ -106,11 +109,12 @@ class FeatureProductsSerializer(serializers.ModelSerializer):
         ]
 
     def get_products(self, obj):
-        request = self.context.get("request") 
+        request = self.context.get("request")
+        variants = getattr(obj, "homepage_variants", [])
         return ProductCardSerializer(
-            obj.homepage_variants[:12],
+            variants[:12],
             many=True,
-            context={'request': request}
+            context={"request": request}
         ).data
 
 
