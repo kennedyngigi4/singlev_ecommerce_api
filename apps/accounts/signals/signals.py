@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 
 from apps.accounts.models.models import User
 from apps.accounts.models.customer_profile import CustomerProfile, CustomerLocation
+from apps.accounts.models.vendor_profile import VendorProfile
 
 
 @receiver(post_save, sender=User)

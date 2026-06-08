@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
-from rest_framework import status, generics
+from rest_framework import status, generics, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -11,8 +11,6 @@ from apps.manager.serializers import *
 
 
 # Create your views here.
-
-
 class StatsDashboardView(APIView):
     permission_classes = [ IsAuthenticated ]
 
@@ -39,7 +37,6 @@ class StatsDashboardView(APIView):
 
         return Response(response)
 
-
 class AllProductsView(APIView):
     permission_classes = [ IsAuthenticated ]
 
@@ -58,8 +55,6 @@ class AllProductsView(APIView):
         serializer = ProductVariantWithProductListSerializer(queryset, many=True, context={ "request": request })
         return Response(serializer.data)
     
-
-
 class AllOrdersView(APIView):
     permission_classes = [ IsAuthenticated ]
 
@@ -82,8 +77,6 @@ class AllOrdersView(APIView):
 
         return Response(serializer.data)
 
-
-
 class OrderDetailsView(APIView):
     permission_classes = [ IsAuthenticated ]
 
@@ -104,8 +97,6 @@ class OrderDetailsView(APIView):
 
         serializer = OrderSerializer(queryset, context={"request": request})
         return Response(serializer.data)
-
-
 
 class DispatchOrderView(APIView):
     permission_classes = [ IsAuthenticated ]
@@ -153,4 +144,75 @@ class DispatchOrderView(APIView):
                 "status": order.status
             }
         })
+
+
+class VendorViewSet(viewsets.ViewSet):
+
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request):
+        serializer = VendorCreateSerializer(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "success": True,
+                "message": "Vendor created successfully."
+            }, status=status.HTTP_201_CREATED)
+        
+
+        first_error = next(iter(serializer.errors.values()))[0]
+        return Response({
+                "success": False,
+                "errors": str(first_error[0]) if isinstance(first_error, list) else str(first_error)
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    
+    def list(self, request):
+        manager = self.request.user
+
+        vendors = VendorProfile.objects.filter(created_by=manager)
+        serializer = VendorProfileSerializer(vendors, many=True)
+        return Response({
+            "success": True,
+            "vendors": serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+    def retrieve(self, request, pk=None):
+        manager = self.request.user
+
+        vendor = get_object_or_404(VendorProfile, id=pk, created_by=manager)
+        serializer = VendorProfileSerializer(vendor)
+        return Response({ "success": True, "vendor": serializer.data }, status=status.HTTP_200_OK)
+
+
+    def partial_update(self, request, pk=None):
+        manager = self.request.user
+        vendor = get_object_or_404(VendorProfile, id=pk, created_by=manager)
+        serializer = VendorCreateSerializer(vendor, data=request.data, partial=True, context={"request": request})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "success": True,
+                "message": "Vendor updated successfully.",
+            }, status=status.HTTP_202_ACCEPTED)
+        
+        first_error = next(iter(serializer.errors.values()))
+
+        if isinstance(first_error, list):
+            first_error = first_error[0]
+        return Response({ "success": False, "errors": str(first_error)}, status=status.HTTP_400_BAD_REQUEST )
+
+
+    def destroy(self, request, pk=None):
+        manager = self.request.user
+
+        vendor = get_object_or_404(VendorProfile, id=pk, created_by=manager)
+        vendor.delete()
+
+        return Response({
+            "success": True,
+            "message": "Vendor deleted successfully.",
+        }, status=status.HTTP_204_NO_CONTENT)
 

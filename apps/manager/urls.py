@@ -1,8 +1,12 @@
 from django.urls import path
 from apps.manager.views import *
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register(r"vendors", VendorViewSet, basename="vendors")
+urlpatterns = router.urls
 
-urlpatterns = [
+urlpatterns += [
     path( "stats/", StatsDashboardView.as_view(), name="stats"),
     path( "products/", AllProductsView.as_view(), name="products" ),
     path("all-orders/", AllOrdersView.as_view(), name="all-orders" ),

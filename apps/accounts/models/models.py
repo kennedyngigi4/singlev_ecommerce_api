@@ -50,7 +50,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USER_ROLES = [
         ( "admin", "admin"),
         ( "manager", "manager"),
-        ( "client", "client")
+        ( "client", "client"),
+        ( "vendor", "vendor")
     ]
 
 

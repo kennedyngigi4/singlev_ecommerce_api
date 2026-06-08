@@ -1,5 +1,9 @@
+from django.db import transaction
+
 from rest_framework import serializers
 
+from apps.accounts.models.models import User
+from apps.accounts.models.vendor_profile import VendorProfile
 from apps.orders.models import *
 from apps.payments.models import *
 
@@ -32,7 +36,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
         return None
     
-
 class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MpesaPayment
@@ -40,7 +43,6 @@ class PaymentsSerializer(serializers.ModelSerializer):
             "id", "transaction_code", "phone_number", "amount", "status", "created_at"
         ]
     
-
 class OrderSerializer(serializers.ModelSerializer):
     order_items = OrderItemSerializer(many=True, read_only=True)
     payments = PaymentsSerializer(many=True, read_only=True)
@@ -52,7 +54,6 @@ class OrderSerializer(serializers.ModelSerializer):
            "status", "payment_status", "order_items", "payments"
         ]   
 
-
 class ProductForVariantSerializer(serializers.ModelSerializer):
     category = serializers.CharField(source="category.name", read_only=True)
     brand = serializers.CharField(source="brand.name", read_only=True)
@@ -62,7 +63,6 @@ class ProductForVariantSerializer(serializers.ModelSerializer):
         fields = [
             "id","name", "category", "brand", "is_active"
         ]
-
 
 class ProductVariantWithProductListSerializer(serializers.ModelSerializer):
     product = ProductForVariantSerializer(read_only=True)
@@ -90,4 +90,74 @@ class ProductVariantWithProductListSerializer(serializers.ModelSerializer):
         )
 
         return image_url
+
+
+class VendorCreateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    fullname = serializers.CharField()
+    phone = serializers.CharField()
+    role = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    business_name = serializers.CharField()
+    business_phone = serializers.CharField()
+    business_location = serializers.CharField()
+    business_status = serializers.CharField()
+
+
+    @transaction.atomic
+    def create(self, validated_data):
+        manager = self.context["request"].user
+
+        user = User.objects.create_user(
+            fullname=validated_data["fullname"],
+            email=validated_data["email"],
+            role=validated_data["role"],
+            phone=validated_data["phone"],
+            password=validated_data["password"],
+        )
+
+
+        vendor = VendorProfile.objects.create(
+            user=user,
+            business_name=validated_data["business_name"],
+            business_phone=validated_data["business_phone"],
+            business_location=validated_data["business_location"],
+            business_status=validated_data["business_status"],
+            created_by=manager
+        )
+
+
+        return vendor
+    
+
+    def validate_business_name(self, value):
+        if VendorProfile.objects.filter(business_name__iexact=value).exists():
+            raise serializers.ValidationError(
+                "A vendor with this business name already exists."
+            )
+        return value
+
+
+
+
+class VendorProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VendorProfile
+        fields = [
+            "id",
+            "business_name",
+            "business_phone",
+            "business_location",
+            "business_status",
+        ]
+
+class ManagerVendorsSerializer(serializers.ModelSerializer):
+    vendors = VendorProfileSerializer(source="vendor_creator", many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["id", "fullname", "email", "vendors"]
+
+
 

@@ -180,11 +180,6 @@ class ProductVariant(models.Model):
 
 
 
-    
-
-
-
-
 class ProductImage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")

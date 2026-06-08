@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'apps.stock.apps.StockConfig',
     'apps.app_config.apps.AppConfigConfig',
     'apps.mobile.apps.MobileConfig',
+    'apps.vendor.apps.VendorConfig',
 ]
 
 INSTALLED_APPS += [

@@ -31,6 +31,12 @@ urlpatterns += [
 ]
 
 
+#Vendor Endpoints
+urlpatterns += [
+    path("v1/vendor/", include("apps.vendor.urls.urls")),
+]
+
+
 # Mobile Endpoints
 urlpatterns += [
     path("v1/mobile/", include("apps.mobile.urls")),
